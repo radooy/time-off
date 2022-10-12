@@ -1,0 +1,8 @@
+h1 {
+  font-family: 'Fuzzy Bubbles', cursive;
+}
+
+h1 > span {
+  color: black;
+  font-size: 1rem;
+}
