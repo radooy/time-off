@@ -6,3 +6,7 @@ h1 > span {
   color: black;
   font-size: 1rem;
 }
+
+.active {
+  font-weight: bolder;
+}
