@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
 
+import { useNavigate } from 'react-router-dom';
+
 import { Button, Card, CardActions, CardContent, TextField, InputAdornment } from '@mui/material';
 import EmailIcon from '@mui/icons-material/Email';
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
 
 import { errors as errorMessages } from '../../utils/messages/errors';
+
+import { logIn } from '../../store/slices/authSlice';
+import {useDispatch} from 'react-redux';
 
 function Login() {
 
@@ -16,6 +21,9 @@ function Login() {
         email: false,
         password: false
     });
+
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const onChangeHandler = (e) => {
         setErrors((prevState) => ({
@@ -37,6 +45,12 @@ function Login() {
 
         let hasError = checkData();
         if (hasError) return;
+
+        // send data to server
+        
+        // if response is ok save credentials and user info sent by the server and then navigate to home
+        dispatch(logIn('Rado'));
+        navigate("/home");
     };
 
     const checkData = () => {

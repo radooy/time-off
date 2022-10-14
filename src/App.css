@@ -10,3 +10,21 @@ h1 > span {
 .active {
   font-weight: bolder;
 }
+
+.flex {
+  display: flex;
+}
+
+.flex.space-between {
+  justify-content: space-between;
+}
+
+.log-out {
+  margin: auto 0;
+}
+
+.log-out:hover {
+  color: black;
+  font-weight: bolder;
+  cursor: pointer;
+}
