@@ -2,6 +2,7 @@ import { useDispatch } from 'react-redux';
 import { logOut } from '../../store/slices/authSlice';
 import { useNavigate } from 'react-router-dom';
 
+import { StyledLogoutButton } from './logOutButtonStyles';
 
 function LogoutButton() {
     const dispatch = useDispatch();
@@ -13,7 +14,7 @@ function LogoutButton() {
     }
 
     return (
-        <div className="log-out" onClick={handleLogOut}>Log out</div>
+        <StyledLogoutButton className="log-out" onClick={handleLogOut}>Log out</StyledLogoutButton>
     )
 }
 
