@@ -15,3 +15,12 @@ export const StyledDatesContainer = styled.div`
     flex-direction: column;
     gap: 20px;
 `
+export const StyledText = styled.div`
+    color: green;
+    font-size: 12px;
+`
+
+export const StyledError = styled.div`
+    color: red;
+    font-size: 12px;
+`
