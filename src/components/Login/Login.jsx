@@ -49,7 +49,7 @@ function Login() {
         // send data to server
         
         // if response is ok save credentials and user info sent by the server and then navigate to home
-        dispatch(logIn('Rado'));
+        dispatch(logIn({name: 'Rado', paidLeave: 22}));
         navigate("/home");
     };
 
