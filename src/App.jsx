@@ -3,6 +3,7 @@ import Home from './components/Home/Home';
 import Background from './components/Background/Background';
 import SideNav from './components/SideNav/SideNav';
 import LogoutButton from './components/LogoutButton/LogoutButton';
+import Request from './components/Request/Request';
 
 import { Container, Card } from '@mui/material';
 import { Routes, Route } from 'react-router-dom';
@@ -27,7 +28,7 @@ function App() {
             <Card sx={{
               padding: "20px",
               width: "100%",
-              height: {
+              minHeight: {
                 xs: "350px",
                 md: "initial"
               }
@@ -35,6 +36,7 @@ function App() {
             >
               <Routes>
                 <Route path="/home" element={<Home />} />
+                <Route path="/request" element={<Request />} />
               </Routes>
             </Card>
           </Background> :
