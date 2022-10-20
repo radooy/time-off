@@ -8,7 +8,7 @@ import { StyledHeading, StyledContainer, StyledDatesContainer, StyledText, Style
 import differenceInBusinessDays from 'date-fns/differenceInBusinessDays'
 
 import { errors } from "../../utils/messages/errors";
-import { plainText } from "../../utils/messages/plainText";
+import { constants } from "../../utils/messages/constants";
 
 function Request() {
     const {
@@ -32,12 +32,12 @@ function Request() {
     const submitRequest = () => {
         const requestDays = differenceInBusinessDays(endDate, startDate);
 
-        if (timeoff !== plainText.sickLeaveValue && requestDays > daysLeft) {
+        if (timeoff !== constants.sickLeaveValue && requestDays > daysLeft) {
             setError(errors.paidLeaveDays);
             return;
         };
 
-        if (requestDays < 1) {
+        if (requestDays < constants.minRequestDays) {
             setError(errors.date);
             return;
         };
@@ -50,7 +50,7 @@ function Request() {
             const sizeMB = ((e?.target?.files[0]?.size) / 1024 / 1024).toFixed(2);
             const type = e?.target?.files[0]?.type;
 
-            if (sizeMB < 2 && (type === plainText.pdf || type === plainText.png || type === plainText.jpeg)) {
+            if (sizeMB < constants.fileSizeMB && (type === constants.pdf || type === constants.png || type === constants.jpeg)) {
                 setFile(e.target.files[0]);
                 return;
             };
@@ -61,14 +61,14 @@ function Request() {
     };
 
     const disableWeekends = (date) => {
-        return date.getDay() === 0 || date.getDay() === 6;
+        return date.getDay() === constants.sundayCalendarNumber || date.getDay() === constants.saturdayCalendarNumber;
     };
 
     return (
         <StyledContainer>
-            <StyledHeading>{plainText.request}</StyledHeading>
+            <StyledHeading>{constants.request}</StyledHeading>
             <FormControl fullWidth>
-                <InputLabel id="select-label">{plainText.type}</InputLabel>
+                <InputLabel id="select-label">{constants.type}</InputLabel>
                 <Select
                     labelId="select-label"
                     id="select"
@@ -76,12 +76,12 @@ function Request() {
                     label="Age"
                     onChange={handleChange}
                 >
-                    <MenuItem value={plainText.paidLeaveValue}>{plainText.paidLeave}</MenuItem>
-                    <MenuItem value={plainText.sickLeaveValue}>{plainText.sickLeave}</MenuItem>
+                    <MenuItem value={constants.paidLeaveValue}>{constants.paidLeave}</MenuItem>
+                    <MenuItem value={constants.sickLeaveValue}>{constants.sickLeave}</MenuItem>
                 </Select>
             </FormControl>
 
-            {timeoff === plainText.paidLeaveValue &&
+            {timeoff === constants.paidLeaveValue &&
                 <StyledText>You have <b>{daysLeft}</b> days left</StyledText>
             }
 
@@ -115,19 +115,19 @@ function Request() {
                 </LocalizationProvider>
             </StyledDatesContainer>
 
-            {timeoff === plainText.sickLeaveValue &&
+            {timeoff === constants.sickLeaveValue &&
                 <TextField
                     id="file"
                     type="file"
-                    helperText={fileError || plainText.attachPhoto}
+                    helperText={fileError || constants.attachPhoto}
                     onChange={onFileUpload}
                     error={!!fileError}
                 />
             }
 
-            {timeoff === plainText.paidLeaveValue &&
+            {timeoff === constants.paidLeaveValue &&
                 <TextField
-                    label={plainText.typeReason}
+                    label={constants.typeReason}
                     variant="outlined"
                     value={reason} onChange={(e) => setReason(e.target.value)}
                 />
@@ -140,14 +140,14 @@ function Request() {
             <Button
                 disabled={
                     timeoff === '' ||
-                    (timeoff === plainText.sickLeaveValue && file === '') ||
-                    (timeoff === plainText.paidLeaveValue && reason === '')
+                    (timeoff === constants.sickLeaveValue && file === '') ||
+                    (timeoff === constants.paidLeaveValue && reason === '')
                 }
                 variant="contained"
                 sx={{ margin: "0 0 0 auto" }}
                 onClick={submitRequest}
             >
-                {plainText.submit}
+                {constants.submit}
             </Button>
         </StyledContainer>
     )

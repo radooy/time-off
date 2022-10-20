@@ -1,4 +1,4 @@
-export const plainText = {
+export const constants = {
     sickLeaveValue: "sick-leave",
     paidLeaveValue: "paid-leave",
     pdf: "application/pdf",
@@ -11,4 +11,8 @@ export const plainText = {
     type: "Type",
     paidLeave: "Paid leave",
     sickLeave: "Sick leave",
+    fileSizeMB: 2,
+    minRequestDays: 1,
+    saturdayCalendarNumber: 6,
+    sundayCalendarNumber: 0
 };
