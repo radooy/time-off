@@ -6,7 +6,7 @@ import { Button, Card, CardActions, CardContent, TextField, InputAdornment } fro
 import EmailIcon from '@mui/icons-material/Email';
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
 
-import { errors as errorMessages } from '../../utils/messages/errors';
+import { errors as errorMessages } from '../../utils/errors';
 
 import { logIn } from '../../store/slices/authSlice';
 import {useDispatch} from 'react-redux';

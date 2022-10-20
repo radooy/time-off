@@ -7,8 +7,8 @@ import { StyledHeading, StyledContainer, StyledDatesContainer, StyledText, Style
 
 import differenceInBusinessDays from 'date-fns/differenceInBusinessDays'
 
-import { errors } from "../../utils/messages/errors";
-import { constants } from "../../utils/messages/constants";
+import { errors } from "../../utils/errors";
+import { constants } from "../../utils/constants";
 
 function Request() {
     const {
