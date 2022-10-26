@@ -18,3 +18,7 @@ h1 > span {
 .flex.space-between {
   justify-content: space-between;
 }
+
+.pl-10 {
+  padding-left: 10px;
+}
