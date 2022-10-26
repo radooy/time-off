@@ -5,7 +5,8 @@ import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { StyledHeading, StyledContainer, StyledDatesContainer, StyledText, StyledError } from "./requestStyles";
 
-import differenceInBusinessDays from 'date-fns/differenceInBusinessDays'
+import differenceInBusinessDays from 'date-fns/differenceInBusinessDays';
+import differenceInCalendarDays from 'date-fns/differenceInCalendarDays'
 
 import { errors } from "../../utils/errors";
 import { constants } from "../../utils/constants";
@@ -30,7 +31,7 @@ function Request() {
     } = useRequest(new Date());
 
     const submitRequest = () => {
-        const requestDays = differenceInBusinessDays(endDate, startDate);
+        const requestDays = differenceInBusinessDays(endDate, startDate) + 1;
 
         if (timeoff !== constants.sickLeaveValue && requestDays > daysLeft) {
             setError(errors.paidLeaveDays);
@@ -66,7 +67,7 @@ function Request() {
 
     return (
         <StyledContainer>
-            <StyledHeading>{constants.request}</StyledHeading>
+            <StyledHeading className="pl-10">{constants.request}</StyledHeading>
             <FormControl fullWidth>
                 <InputLabel id="select-label">{constants.type}</InputLabel>
                 <Select
@@ -82,7 +83,7 @@ function Request() {
             </FormControl>
 
             {timeoff === constants.paidLeaveValue &&
-                <StyledText>You have <b>{daysLeft}</b> days left</StyledText>
+                <StyledText className="pl-10">Days left: <b>{daysLeft}</b></StyledText>
             }
 
             <StyledDatesContainer>
@@ -110,7 +111,7 @@ function Request() {
                         onChange={handleEndDateChange}
                         renderInput={(params) => <TextField {...params} />}
                         shouldDisableDate={disableWeekends}
-                        minDate={endDate}
+                        minDate={startDate}
                     />
                 </LocalizationProvider>
             </StyledDatesContainer>
@@ -126,22 +127,39 @@ function Request() {
             }
 
             {timeoff === constants.paidLeaveValue &&
-                <TextField
-                    label={constants.typeReason}
-                    variant="outlined"
-                    value={reason} onChange={(e) => setReason(e.target.value)}
-                />
+                <>
+                    <TextField
+                        label={constants.typeReason}
+                        variant="outlined"
+                        value={reason} onChange={(e) => setReason(e.target.value)}
+                    />
+
+                    {differenceInBusinessDays(endDate, startDate) + 1 > 0 &&
+                        <>
+                            <StyledText className="pl-10">
+                                Requested days: <b>{differenceInBusinessDays(endDate, startDate) + 1}</b>
+                            </StyledText>
+                            <StyledText className="pl-10">
+                                Total days out of office: <b>{differenceInCalendarDays(endDate, startDate) + 1}</b>
+                            </StyledText>
+                        </>
+                       
+                    }
+
+                </>
+
             }
 
             {error !== "" &&
-                <StyledError>{error}</StyledError>
+                <StyledError className="pl-10">{error}</StyledError>
             }
 
             <Button
                 disabled={
                     timeoff === '' ||
                     (timeoff === constants.sickLeaveValue && file === '') ||
-                    (timeoff === constants.paidLeaveValue && reason === '')
+                    (timeoff === constants.paidLeaveValue && reason === '') ||
+                    differenceInBusinessDays(endDate, startDate) + 1 <= 0
                 }
                 variant="contained"
                 sx={{ margin: "0 0 0 auto" }}
