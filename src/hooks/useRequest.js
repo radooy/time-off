@@ -2,14 +2,12 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 
 export function useRequest(date) {
-    const tomorrow = new Date();
-    tomorrow.setDate(date.getDate() + 1);
 
     const daysLeft = useSelector((state) => state.auth.paidLeave);
 
     const [timeoff, setTimeoff] = useState('');
     const [startDate, setStartDate] = useState(date);
-    const [endDate, setEndDate] = useState(tomorrow);
+    const [endDate, setEndDate] = useState(date);
     const [reason, setReason] = useState('');
     const [error, setError] = useState('');
     const [file, setFile] = useState('');
@@ -34,7 +32,7 @@ export function useRequest(date) {
         setError('');
         setFileError('');
         setStartDate(date);
-        setEndDate(tomorrow);
+        setEndDate(date);
         setFile('');
         setReason('');
     };
