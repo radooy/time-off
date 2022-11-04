@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 
 export function useRequest(date) {
 
-    const daysLeft = useSelector((state) => state.auth.paidLeave);
+    const { paidLeave: daysLeft } = useSelector((state) => state.auth);
 
     const [timeoff, setTimeoff] = useState('');
     const [startDate, setStartDate] = useState(date);
