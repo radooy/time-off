@@ -35,13 +35,13 @@ function App() {
             }}
             >
               <Routes>
-                <Route path="/home" element={<Home />} />
-                <Route path="/request" element={<Request />} />
+                <Route path="/" element={<Home />} />
+                <Route path="request" element={<Request />} />
               </Routes>
             </Card>
           </Background> :
           <Routes>
-            <Route path="/" exact element={<Login />} />
+            <Route path="/" element={<Login />} />
           </Routes>
         }
 
