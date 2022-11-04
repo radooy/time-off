@@ -1,5 +1,5 @@
-import { StyledHeading } from "./homeStyles";
 import { useSelector } from "react-redux";
+import { StyledHeading } from "./homeStyles";
 
 function Home() {
   const { name, paidLeave: days } = useSelector((state) => state.auth);
@@ -16,6 +16,6 @@ function Home() {
     </>
 
   )
-}
+};
 
 export default Home;
