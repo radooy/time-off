@@ -1,12 +1,30 @@
+import { useCallback, useMemo } from "react";
+
+import { useSelector, useDispatch } from "react-redux";
+import { requestPaidLeave } from "../../store/slices/authSlice";
+
+import { useNavigate } from "react-router-dom";
 import { useRequest } from "../../hooks/useRequest";
+
+import { db } from "../../firebase-app/firebase-app";
+import { doc, updateDoc, arrayUnion } from "firebase/firestore";
+
+import { addBusinessDays, lightFormat } from "date-fns";
+import differenceInBusinessDays from 'date-fns/differenceInBusinessDays';
+import differenceInCalendarDays from 'date-fns/differenceInCalendarDays';
 
 import { FormControl, InputLabel, Select, MenuItem, TextField, Button } from "@mui/material";
 import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { StyledHeading, StyledContainer, StyledDatesContainer, StyledText, StyledError } from "./requestStyles";
 
-import differenceInBusinessDays from 'date-fns/differenceInBusinessDays';
-import differenceInCalendarDays from 'date-fns/differenceInCalendarDays'
+import {
+    StyledHeading,
+    StyledContainer,
+    StyledDatesContainer,
+    StyledText,
+    StyledError,
+    InfoTextContainer
+} from "./requestStyles";
 
 import { errors } from "../../utils/errors";
 import { constants } from "../../utils/constants";
@@ -30,18 +48,52 @@ function Request() {
         handleEndDateChange
     } = useRequest(new Date());
 
-    const submitRequest = () => {
-        const requestDays = differenceInBusinessDays(endDate, startDate) + 1;
+    const { id } = useSelector((state) => state.auth);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
-        if (timeoff !== constants.sickLeaveValue && requestDays > daysLeft) {
+    const diffInBusDays = useMemo(() => differenceInBusinessDays(endDate, startDate) + 1, [startDate, endDate]);
+
+    const submitRequest = () => {
+        const isPaidLeaveRequest = timeoff === constants.paidLeaveValue;
+
+        if (isPaidLeaveRequest && diffInBusDays > daysLeft) {
             setError(errors.paidLeaveDays);
             return;
         };
 
-        if (requestDays < constants.minRequestDays) {
+        if (diffInBusDays < constants.minRequestDays) {
             setError(errors.date);
             return;
         };
+
+        const userRef = doc(db, constants.users, id);
+        const historyObject = {
+            days: diffInBusDays,
+            type: timeoff,
+            endDate: lightFormat(endDate, constants.dateFormat),
+            startDate: lightFormat(startDate, constants.dateFormat),
+        };
+
+        const paidLeave = isPaidLeaveRequest ? Number(Number(daysLeft) - diffInBusDays) : daysLeft;
+
+        if (isPaidLeaveRequest) {
+            historyObject.reason = reason;
+        };
+
+        if (!isPaidLeaveRequest) {
+            historyObject.file = file;
+        };
+
+        updateDoc(userRef, {
+            paidLeave: paidLeave,
+            history: arrayUnion(historyObject)
+        }).then(res => {
+            if (isPaidLeaveRequest) {
+                dispatch(requestPaidLeave({ paidLeave, historyObject }));
+            };
+            navigate("/");
+        }).catch(e => console.log(e));
     };
 
     const onFileUpload = (e) => {
@@ -64,6 +116,12 @@ function Request() {
     const disableWeekends = (date) => {
         return date.getDay() === constants.sundayCalendarNumber || date.getDay() === constants.saturdayCalendarNumber;
     };
+
+    const sumTotalDaysOutOfOffice = useCallback(() => {
+        const sum = differenceInCalendarDays(addBusinessDays(startDate, diffInBusDays), startDate);
+
+        return startDate.getDay() === constants.mondayCalendarNumber ? sum + constants.weekendValue : sum;
+    }, [startDate, diffInBusDays]);
 
     return (
         <StyledContainer>
@@ -93,7 +151,7 @@ function Request() {
                     <DesktopDatePicker
                         disabled={timeoff === ""}
                         label="From"
-                        inputFormat="dd/MM/yyyy"
+                        inputFormat={constants.dateFormat}
                         value={startDate}
                         onChange={handleStartDateChange}
                         renderInput={(params) => <TextField {...params} />}
@@ -106,7 +164,7 @@ function Request() {
                     <DesktopDatePicker
                         disabled={timeoff === ""}
                         label="To"
-                        inputFormat="dd/MM/yyyy"
+                        inputFormat={constants.dateFormat}
                         value={endDate}
                         onChange={handleEndDateChange}
                         renderInput={(params) => <TextField {...params} />}
@@ -134,20 +192,17 @@ function Request() {
                         value={reason} onChange={(e) => setReason(e.target.value)}
                     />
 
-                    {differenceInBusinessDays(endDate, startDate) + 1 > 0 &&
-                        <>
+                    {diffInBusDays > 0 &&
+                        <InfoTextContainer>
                             <StyledText className="pl-10">
-                                Requested days: <b>{differenceInBusinessDays(endDate, startDate) + 1}</b>
+                                Requested days: <b>{diffInBusDays}</b>
                             </StyledText>
                             <StyledText className="pl-10">
-                                Total days out of office: <b>{differenceInCalendarDays(endDate, startDate) + 1}</b>
+                                Total days out of office: <b>{sumTotalDaysOutOfOffice()}</b>
                             </StyledText>
-                        </>
-                       
+                        </InfoTextContainer>
                     }
-
                 </>
-
             }
 
             {error !== "" &&
@@ -159,7 +214,7 @@ function Request() {
                     timeoff === '' ||
                     (timeoff === constants.sickLeaveValue && file === '') ||
                     (timeoff === constants.paidLeaveValue && reason === '') ||
-                    differenceInBusinessDays(endDate, startDate) + 1 <= 0
+                    diffInBusDays <= 0
                 }
                 variant="contained"
                 sx={{ margin: "0 0 0 auto" }}
