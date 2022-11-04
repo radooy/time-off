@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
+import {useDispatch} from 'react-redux';
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 
 import { Button, Card, CardActions, CardContent, TextField, InputAdornment } from '@mui/material';
 import EmailIcon from '@mui/icons-material/Email';
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
 
-import { errors as errorMessages } from '../../utils/errors';
-
 import { logIn } from '../../store/slices/authSlice';
-import {useDispatch} from 'react-redux';
+import { auth, db } from '../../firebase-app/firebase-app';
+
+import { errors as errorMessages } from '../../utils/errors';
 
 function Login() {
 
@@ -37,7 +40,7 @@ function Login() {
         }));
     };
 
-    const submitData = () => {
+    const submitData = async () => {
         setErrors({
             email: false,
             password: false
@@ -46,11 +49,25 @@ function Login() {
         let hasError = checkData();
         if (hasError) return;
 
-        // send data to server
-        
-        // if response is ok save credentials and user info sent by the server and then navigate to home
-        dispatch(logIn({name: 'Rado', paidLeave: 22}));
-        navigate("/home");
+        try {
+            const userQuery = await signInWithEmailAndPassword(auth, loginData.email, loginData.password);
+            const uid =  userQuery.user.uid;
+            const docRef = doc(db, "users", uid);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                const {firstName, paidLeave, history} = docSnap.data();
+
+                dispatch(logIn({name: firstName, paidLeave, history, id: uid}));
+                navigate("/");
+
+            } else {
+                console.log("No such document!");
+            }
+
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     const checkData = () => {
