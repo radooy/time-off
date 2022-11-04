@@ -14,5 +14,9 @@ export const constants = {
     fileSizeMB: 2,
     minRequestDays: 1,
     saturdayCalendarNumber: 6,
-    sundayCalendarNumber: 0
+    sundayCalendarNumber: 0,
+    mondayCalendarNumber: 1,
+    weekendValue: 2,
+    users: "users",
+    dateFormat: "dd/MM/yyyy"
 };
