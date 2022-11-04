@@ -13,7 +13,7 @@ function SideNav() {
             textAlign: "center"
         }}
         >
-            <StyledLink to="home">Home</StyledLink>
+            <StyledLink to="/" end>Home</StyledLink>
             <StyledLink to="request">Request time off</StyledLink>
             <StyledLink to="history">History</StyledLink>
         </Card>
