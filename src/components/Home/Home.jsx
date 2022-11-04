@@ -2,8 +2,7 @@ import { StyledHeading } from "./homeStyles";
 import { useSelector } from "react-redux";
 
 function Home() {
-  const name = useSelector((state) => state.auth.name);
-  const days = useSelector((state) => state.auth.paidLeave)
+  const { name, paidLeave: days } = useSelector((state) => state.auth);
 
   return (
     <>
