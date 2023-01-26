@@ -1,6 +1,6 @@
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
-import 'firebase/compat/firestore';
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
+import "firebase/compat/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -9,7 +9,7 @@ const firebaseConfig = {
   projectId: "time-off-react",
   storageBucket: "time-off-react.appspot.com",
   messagingSenderId: "272095822289",
-  appId: "1:272095822289:web:e618c3a146d53730e720f0"
+  appId: "1:272095822289:web:e618c3a146d53730e720f0",
 };
 
 // Initialize Firebase

@@ -6,16 +6,16 @@ function Home() {
 
   return (
     <>
-      <StyledHeading className="pl-10">
-        Hello {name}!
-      </StyledHeading>
+      <StyledHeading className="pl-10">Hello {name}!</StyledHeading>
       <div className="pl-10">
-        Here in the home page will be displayed the information about how to request a time off or sick leave.
-        <p>You have <b>{days} days</b> remaining!</p>
+        Here in the home page will be displayed the information about how to
+        request a time off or sick leave.
+        <p>
+          You have <b>{days} days</b> remaining!
+        </p>
       </div>
     </>
-
-  )
-};
+  );
+}
 
 export default Home;
