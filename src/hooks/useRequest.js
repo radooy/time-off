@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
 export function useRequest(date) {
 
-    const { paidLeave: daysLeft } = useSelector((state) => state.auth);
+    const { paidLeave: daysLeft, id } = useSelector((state) => state.auth);
 
     const [timeoff, setTimeoff] = useState('');
     const [startDate, setStartDate] = useState(date);
@@ -12,6 +13,9 @@ export function useRequest(date) {
     const [error, setError] = useState('');
     const [file, setFile] = useState('');
     const [fileError, setFileError] = useState('');
+
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleChange = (event) => {
         resetForm();
@@ -38,6 +42,7 @@ export function useRequest(date) {
     };
 
     return {
+        id,
         daysLeft,
         timeoff,
         startDate,
@@ -53,5 +58,7 @@ export function useRequest(date) {
         handleChange,
         handleStartDateChange,
         handleEndDateChange,
+        navigate,
+        dispatch
     };
 };

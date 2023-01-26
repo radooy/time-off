@@ -1,9 +1,7 @@
 import { useCallback, useMemo } from "react";
 
-import { useSelector, useDispatch } from "react-redux";
 import { requestPaidLeave } from "../../store/slices/authSlice";
 
-import { useNavigate } from "react-router-dom";
 import { useRequest } from "../../hooks/useRequest";
 
 import { db } from "../../firebase-app/firebase-app";
@@ -31,6 +29,7 @@ import { constants } from "../../utils/constants";
 
 function Request() {
     const {
+        id,
         daysLeft,
         timeoff,
         startDate,
@@ -45,12 +44,10 @@ function Request() {
         setFileError,
         handleChange,
         handleStartDateChange,
-        handleEndDateChange
+        handleEndDateChange,
+        navigate,
+        dispatch
     } = useRequest(new Date());
-
-    const { id } = useSelector((state) => state.auth);
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
 
     const diffInBusDays = useMemo(() => differenceInBusinessDays(endDate, startDate) + 1, [startDate, endDate]);
 
@@ -213,7 +210,7 @@ function Request() {
                 disabled={
                     timeoff === '' ||
                     (timeoff === constants.sickLeaveValue && file === '') ||
-                    (timeoff === constants.paidLeaveValue && reason === '') ||
+                    (timeoff === constants.paidLeaveValue && reason.trim() === '') ||
                     diffInBusDays <= 0
                 }
                 variant="contained"
