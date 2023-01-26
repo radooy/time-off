@@ -1,50 +1,54 @@
-import Login from './components/Login/Login';
-import Home from './components/Home/Home';
-import Background from './components/Background/Background';
-import SideNav from './components/SideNav/SideNav';
-import LogoutButton from './components/LogoutButton/LogoutButton';
-import Request from './components/Request/Request';
+import Login from "./components/Login/Login";
+import Home from "./components/Home/Home";
+import Background from "./components/Background/Background";
+import SideNav from "./components/SideNav/SideNav";
+import LogoutButton from "./components/LogoutButton/LogoutButton";
+import Request from "./components/Request/Request";
 
-import { Container, Card } from '@mui/material';
-import { Routes, Route } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { Container, Card } from "@mui/material";
+import { Routes, Route } from "react-router-dom";
+import { useSelector } from "react-redux";
 
-import './App.css';
+import "./App.css";
+import History from "./components/History/History";
 
 function App() {
-
   const loggedIn = useSelector((state) => state.auth.loggedIn);
 
   return (
     <div>
       <Container>
         <div className="flex space-between">
-          <h1>Time off <span>by Radooy</span></h1>
+          <h1>
+            Time off <span>by Radooy</span>
+          </h1>
           {loggedIn && <LogoutButton />}
         </div>
-        {loggedIn ?
+        {loggedIn ? (
           <Background>
             <SideNav />
-            <Card sx={{
-              padding: "20px",
-              width: "100%",
-              minHeight: {
-                xs: "350px",
-                md: "initial"
-              }
-            }}
+            <Card
+              sx={{
+                padding: "20px",
+                width: "100%",
+                minHeight: {
+                  xs: "350px",
+                  md: "initial",
+                },
+              }}
             >
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="request" element={<Request />} />
+                <Route path="history" element={<History />} />
               </Routes>
             </Card>
-          </Background> :
+          </Background>
+        ) : (
           <Routes>
             <Route path="/" element={<Login />} />
           </Routes>
-        }
-
+        )}
       </Container>
     </div>
   );
